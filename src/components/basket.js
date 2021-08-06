@@ -18,7 +18,7 @@ function Basket({ cart }) {
       count += item.qty;
     });
     setCartCount(count);
-    console.log(cartCount);
+    console.log('add');
   }, [cart, cartCount])
 
   const handleClose = () => setShow(false);
@@ -28,7 +28,7 @@ function Basket({ cart }) {
     <>
       <Button variant="outline-success" onClick={handleShow} className="me-2">
         Корзина   <></>
-      <ShoppingCartIcon/><Badge bg="secondary">{cartCount}</Badge>
+      <ShoppingCartIcon/><Badge bg="secondary">{cartCount > 0 ? cartCount : <></>}</Badge>
       </Button>
       <Offcanvas show={show} onHide={handleClose} placement="end">
         <Offcanvas.Header closeButton>
@@ -37,7 +37,7 @@ function Basket({ cart }) {
         <Offcanvas.Body>
           <div className="purchase-card">
             <Container>
-              <CartItem />             
+              <CartItem />            
               <br />    
               <hr />
               <EstimatedTotal />

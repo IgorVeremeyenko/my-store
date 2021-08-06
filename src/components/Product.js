@@ -5,15 +5,20 @@ import { Button, Card } from 'react-bootstrap';
 import { connect } from "react-redux";
 import {
   loadCurrentItem,
-  addToCart,
-  quantity
+  addToCart  
   } from '../redux/shopping/shopping-actions';
 
-const Product = ({ product, addToCart, cart, quantity }) => {
-    const selectedProduct = product;  
-    const OnChange = () => {
-      quantity(selectedProduct.id, 1);
-    }
+const Product = ({ product, addToCart, cart }) => {
+    const selectedProduct = product; 
+    const [cartCount, setCartCount] = useState(0);
+    useEffect(() => {
+      cart.forEach(item => {
+        if(item.id === selectedProduct.id){
+          if(item.qty > 0)
+            setCartCount(item.qty);
+        };
+      });
+    }, [cart, cartCount])
   return (
           <Card style={{ width: '18em' }} border="dark">
                   <Card.Header>{selectedProduct.name}</Card.Header>
@@ -24,8 +29,8 @@ const Product = ({ product, addToCart, cart, quantity }) => {
                       Some quick example text to build on the card title and make up the bulk of
                       the card's content.
                   </Card.Text>
-                  <Button  onClick={() => { OnChange(); addToCart(selectedProduct.id); }}
-                  variant="success" >Добавить в корзину</Button>
+                  <Button  onClick={() => { addToCart(selectedProduct.id); }}
+                  variant="success" disabled={cartCount}>Добавить в корзину</Button>
                   </Card.Body>
               </Card>
       
@@ -35,8 +40,7 @@ const Product = ({ product, addToCart, cart, quantity }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addToCart: (id) => dispatch(addToCart(id)),
-    loadCurrentItem: (item) => dispatch(loadCurrentItem(item)),
-    quantity: (id, value) => dispatch(quantity(id, value))
+    loadCurrentItem: (item) => dispatch(loadCurrentItem(item))
   };
 };
 
