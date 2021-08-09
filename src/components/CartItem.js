@@ -1,77 +1,66 @@
-import { React, useEffect, useState} from 'react';
-import { Row, Col, Card } from "react-bootstrap";
+import { React, useState, useEffect} from 'react';
+import { Row, Col, Card, Container } from "react-bootstrap";
 import { connect } from 'react-redux';
-import { Button } from 'react-bootstrap';
+import { Button, FormControl } from 'react-bootstrap';
 import InputGroup from 'react-bootstrap/InputGroup';
 import NavigateBeforeOutlinedIcon from '@material-ui/icons/NavigateBeforeOutlined';
 import NavigateNextOutlinedIcon from '@material-ui/icons/NavigateNextOutlined';
-import MaskedInput from 'react-maskedinput'
+// import MaskedInput from 'react-maskedinput';
 import { quantity, removeFromCart } from '../redux/shopping/shopping-actions';
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
-
-const CartItem = ({cart, quantity, removeFromCart} ) => {
-
-    const changeQuantityPlus = (currentId) => {
-        let search = cart.map(name => name.id === currentId ? name.qty : 0);
-        let searchInt = parseInt(search);
-        console.log(searchInt);
-        quantity(currentId, searchInt + 1)
+// import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
+const CartItem = ({items}) => {
+    const [count, setCount] = useState(items.qty);
+    const handleRender = (e) => {
+        setCount(e.target.value);
+        quantity(items.id, e.target.value);
+        console.log(items.id, e.target.value);
+        console.log(items.qty)
     }
-
-    const changeQuantityMinus = (currentId) => {
-       
-        let search = cart.map(name => name.id === currentId ? name.qty : 0);
-        let searchInt = parseInt(search);
-        if(searchInt > 0){
-
-            console.log(searchInt);
-            quantity(currentId, searchInt - 1)
-        }
-        
-        else
-            removeFromCart(currentId);
-    }
-   
+    useEffect(() => {
+        console.log('change count');
+        quantity(items.id, count);
+        console.log(items.qty)
+    }, [count])
     return (
-        <Row xs={1} md={2} className="g-4">
-        {cart.map((_, idx) => (
-            <>
-            
-            <Col>
-            <Card>
-                <Card.Img variant="top" src={_.img} />
-                <Card.Body>
-                <Card.Title>{_.name}</Card.Title>                
-                </Card.Body>
-            </Card>
-            </Col>
-            <Col>
-                <div>{_.cost}<i class="fa-solid fa-cutlery"></i> грн</div>
-                <InputGroup style={{flexWrap: 'nowrap'}}>                               
-                    <Button variant="outline-secondary" onClick={() => changeQuantityMinus(_.id)}><NavigateBeforeOutlinedIcon/></Button>
-                        <MaskedInput mask="111" a11yTitle="2" textAlign="center" name="btn" placeholder={_.qty}/>
-                    <Button variant="outline-secondary" onClick={() => changeQuantityPlus(_.id)}><NavigateNextOutlinedIcon/></Button>
-                </InputGroup>
-                <br></br>
-                <Button variant="outline-danger" onClick={() => removeFromCart(_.id)}><BackspaceOutlinedIcon/> Удалить</Button>
-            </Col>
-            </>
-        ))}
-        </Row>
+        <Container>
+                <>
+                <hr></hr>
+                <Row xs={1} md={2} className="g-4">
+                    <Col>
+                    <Card>
+                        <Card.Img variant="top" src={items.img} />
+                        <Card.Body>
+                        <Card.Title>{items.name}</Card.Title>
+                        </Card.Body>
+                    </Card>
+                    </Col>
+                    <Col>
+                        <div>{items.cost}<i className="fa-solid fa-cutlery">  грн</i></div>                        
+                        <InputGroup>
+                            <Button variant="outline-secondary" onClick={() => {setCount(count - 1); }}><NavigateBeforeOutlinedIcon/></Button>
+                            <FormControl
+                                value={count} 
+                                min="1"
+                                onChange={(e) => handleRender(e)}    
+                            />
+                            <Button variant="outline-secondary" onClick={() => setCount(count + 1)}><NavigateNextOutlinedIcon/></Button>
+                        </InputGroup>                           
+                        <hr></hr>
+                        <Button variant="outline-danger" onClick={() => removeFromCart(items.id)}>Удалить</Button>                 
+                    </Col>  
+                </Row>  
+                </>  
+        </Container>
     )
+    
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      quantity: (item, value) => dispatch(quantity(item, value)),
+      quantity: (itemId, value) => dispatch(quantity(itemId, value)),
       removeFromCart: (itemId) => dispatch(removeFromCart(itemId))
     };
   };
 
-const mapStateToProps = state => {
-    return {
-        cart: state.shop.cart
-    }
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(CartItem);
+export default connect(null, mapDispatchToProps)(CartItem);

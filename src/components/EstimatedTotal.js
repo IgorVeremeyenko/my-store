@@ -1,17 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 import { Row, Col } from "react-bootstrap";
 
-export default class EstimatedTotal extends Component {
-  render() {
+export default function EstimatedTotal({value}) {
+  
     return (
       <Row>
-        <Col xs={6}>
+        <Col xs={8}>
           <h3>Всего к оплате:</h3>
         </Col>
         <Col xs={6}>
-          <h3>$97</h3>
+          <h3>{value} грн</h3>
         </Col>
       </Row>
     );
-  }
+  
 }

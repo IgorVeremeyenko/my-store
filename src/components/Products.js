@@ -6,11 +6,11 @@ import Product from './Product';
 
 const Products = ({products}) => {
     const allProducts = products;
-    const items = allProducts.map((product) => {
+    const items = allProducts.map((item, idx) => {
       
       return (
           <Col>
-            <Product key={product.id} product={product}/>          
+            <Product key={idx} product={item}/>          
           </Col>
       );
     });
