@@ -45,8 +45,12 @@ const shopReducer = (state = INITIAL_STATE, action) => {
         return{}
         case actionTypes.QUANTITY:
         return{
+          // ...state,
+          // cart: state.cart.map(item => item.id === action.payload.id ? {...item, qty: +action.payload.qty} : item)
           ...state,
-          cart: state.cart.map(item => item.id === action.payload.id ? {...item, qty: action.payload.qty} : item)
+          cart: state.cart.filter(c => 
+            c.id === action.payload.id ? (c.qty = action.payload.qty) : c.qty
+          ),
         };
         default: 
         return state;

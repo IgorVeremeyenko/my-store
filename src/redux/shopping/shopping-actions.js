@@ -25,12 +25,13 @@ export const loadCurrentItem = (item) => {
     }
 }
 
-export const quantity = (itemId, value) => {
+export const quantity = (itemId, qty) => {
+    console.log('action quantity ' + qty);
     return {
         type: actionTypes.QUANTITY,
         payload: {
             id: itemId,
-            qty: value
+            qty,
         }
     }
 }
